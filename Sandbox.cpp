@@ -1411,6 +1411,10 @@ void Sandbox::display(GLContextData& contextData) const
 	if (showCustomDEM){
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Vrui::setMainMenu(mainMenu);
+
+		// Vrui::getWidgetManager()->isVisible(contextData);
 		return;
 	}
 
@@ -1730,6 +1734,7 @@ void Sandbox::eventCallback(Vrui::Application::EventID eventId,Vrui::InputDevice
 				break;
 			case 1:
 				showCustomDEM = !showCustomDEM;
+				showCustomDEMToggle->setToggle(showCustomDEM);
 				break; //update flag based on toggle button			
 			}
 		}

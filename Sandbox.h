@@ -229,6 +229,7 @@ class Sandbox:public Vrui::Application,public GLObject
 	
 	bool showCustomDEM;	//Flag to track whether the custom DEM is active
 	void demToggleCallback(GLMotif::ToggleButton::ValueChangedCallbackData* cbData);
+	GLMotif::ToggleButton* showCustomDEMToggle; // Button to toggle the custom DEM on/off
 
 
 	/* Private methods: */
