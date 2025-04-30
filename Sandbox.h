@@ -176,7 +176,7 @@ class Sandbox:public Vrui::Application,public GLObject
 		GLfloat waterOpacity; // Opacity factor for water when rendered as texture
 		SurfaceRenderer* surfaceRenderer; // Surface rendering object for this window
 		WaterRenderer* waterRenderer; // A renderer to render the water surface as geometry
-		
+				
 		/* Constructors and destructors: */
 		RenderSettings(void); // Creates default rendering settings
 		RenderSettings(const RenderSettings& source); // Copy constructor
@@ -227,6 +227,10 @@ class Sandbox:public Vrui::Application,public GLObject
 	GLMotif::TextFieldSlider* waterAttenuationSlider;
 	int controlPipeFd; // File descriptor of an optional named pipe to send control commands to a running AR Sandbox
 	
+	bool showCustomDEM;	//Flag to track whether the custom DEM is active
+	void demToggleCallback(GLMotif::ToggleButton::ValueChangedCallbackData* cbData);
+
+
 	/* Private methods: */
 	void rawDepthFrameDispatcher(const Kinect::FrameBuffer& frameBuffer); // Callback receiving raw depth frames from the Kinect camera; forwards them to the frame filter and rain maker objects
 	void receiveFilteredFrame(const Kinect::FrameBuffer& frameBuffer); // Callback receiving filtered depth frames from the filter object

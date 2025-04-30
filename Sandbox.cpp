@@ -357,6 +357,11 @@ GLMotif::PopupMenu* Sandbox::createMainMenu(void)
 	pauseUpdatesToggle->setToggle(false);
 	pauseUpdatesToggle->getValueChangedCallbacks().add(this,&Sandbox::pauseUpdatesCallback);
 	
+	//* Create a button to toggle the DEM: */
+	GLMotif::ToggleButton* demToggle = new GLMotif::ToggleButton("DEMToolToggleButton", mainMenu, "Toggle DEM");
+	demToggle->setToggle(false);
+	demToggle->getValueChangedCallbacks().add(this, &Sandbox::demToggleCallback); // Correct callback name
+	
 	if(waterTable!=0)
 		{
 		/* Create a button to show the water control dialog: */
@@ -558,7 +563,8 @@ Sandbox::Sandbox(int& argc,char**& argv)
 	 activeDem(0),
 	 mainMenu(0),pauseUpdatesToggle(0),waterControlDialog(0),
 	 waterSpeedSlider(0),waterMaxStepsSlider(0),frameRateTextField(0),waterAttenuationSlider(0),
-	 controlPipeFd(-1)
+	 controlPipeFd(-1),
+	 showCustomDEM(false) //initialize flag
 	{
 	/* Read the sandbox's default configuration parameters: */
 	std::string sandboxConfigFileName=CONFIG_CONFIGDIR;
@@ -1401,6 +1407,14 @@ void Sandbox::frame(void)
 
 void Sandbox::display(GLContextData& contextData) const
 	{
+	// check if custom DEM is active
+	if (showCustomDEM){
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		return;
+	}
+
+
 	/* Get the data item: */
 	DataItem* dataItem=contextData.retrieveDataItem<DataItem>(this);
 	
@@ -1714,6 +1728,9 @@ void Sandbox::eventCallback(Vrui::Application::EventID eventId,Vrui::InputDevice
 				pauseUpdatesToggle->setToggle(pauseUpdates);
 				
 				break;
+			case 1:
+				showCustomDEM = !showCustomDEM;
+				break; //update flag based on toggle button			
 			}
 		}
 	}
@@ -1755,7 +1772,10 @@ void Sandbox::initContext(GLContextData& contextData) const
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebufferEXT(GL_FRAMEBUFFER_EXT,currentFrameBuffer);
-	} 
 	}
-
+	}	
+void Sandbox::demToggleCallback(GLMotif::ToggleButton::ValueChangedCallbackData* cbData)
+	{
+		showCustomDEM = cbData->set; // Update the flag based on the toggle state
+	}
 VRUI_APPLICATION_RUN(Sandbox)
